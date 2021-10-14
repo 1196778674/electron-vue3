@@ -4,9 +4,9 @@ module.exports = {
       electronBuilder: {
         builderOptions: {
           // options placed here will be merged with default configuration and passed to electron-builder
-          "appId": "this.is.tasky",
-          "productName": "Tasky",
-          "copyright": "Copyright © 2021 Alaso",
+          "appId": "com.contract",
+          "productName": "工具",
+          "copyright": "Copyright © 2021 xiaohuihui",
           "directories": {
             "buildResources": "build"
           },
@@ -38,6 +38,7 @@ module.exports = {
           "win": {
             "target": [
               "msi",
+              "zip",
               "nsis"
             ],
             "icon": "build/icons/icon.ico"
@@ -46,7 +47,10 @@ module.exports = {
             "oneClick": false,
             "language": "2052",
             "perMachine": true,
-            "allowToChangeInstallationDirectory": true
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true, // 创建桌面图标
+            "createStartMenuShortcut": true, // 创建开始菜单图标
+            "shortcutName": '工具' // 图标名称
           }
         }
       }
