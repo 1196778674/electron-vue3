@@ -1,5 +1,5 @@
 {
-  "name": "admin-vue",
+  "name": "xiaohuihui",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "electron:build": "vue-cli-service electron:build",
     "win": "vue-cli-service electron:build --win",
     "mac": "vue-cli-service electron:build --mac",
-    "electron:serve": "vue-cli-service electron:serve",
+    "start": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
