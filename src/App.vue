@@ -8,22 +8,32 @@
         @select="handleSelect"
         class="menu"
       >
-        <el-menu-item index="1">首页</el-menu-item>
-        <el-menu-item index="2">清单</el-menu-item>
+        <el-menu-item index="/">
+          <router-link to="/">首页</router-link>
+        </el-menu-item>
+        <el-menu-item index="/list">
+          <router-link to="/list">清单</router-link>
+        </el-menu-item>
       </el-menu>
     </el-header>
+    <router-view />
   </el-container>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { ref, watch, reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
 
 type IActive = string;
 
 export default {
   setup() {
-    const active = ref<IActive>("1");
-    const handleSelect = () => {};
+    const useRouterCurrent = reactive(useRouter());
+    const path = useRouterCurrent.options.history.location;
+    const active = ref<IActive>(path || "/");
+    const handleSelect = (index: string): void => {
+      console.log(index);
+    };
     return {
       active,
       handleSelect,
@@ -36,6 +46,10 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+.el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+  background: none !important;
 }
 .app-header {
   height: 50px;
@@ -52,6 +66,16 @@ export default {
     min-width: 200px;
     background: none;
     border-bottom: none;
+    .el-menu-item {
+      padding: 0 !important;
+    }
+    a {
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0 20px;
+    }
   }
 }
 </style>
