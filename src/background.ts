@@ -1,9 +1,10 @@
 'use strict'
 
-import { app, protocol, BrowserWindow,webContents, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, Notification, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -68,6 +69,12 @@ app.on('ready', async () => {
   ipcMain.on('toast-message', (event, arg) => {
     setTimeout(() => {
       event.reply('toast-reply', 'pong')
+      // 通知
+      const toast = new Notification({
+        title: '通知',
+        subtitle: '今天的工作做完了吗？'
+      })
+      toast.show()
     }, 3000);
   })
 
