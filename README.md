@@ -1,4 +1,4 @@
-# admin-vue
+# electron-vue
 
 ## Project setup
 ```
