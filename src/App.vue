@@ -21,8 +21,9 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, reactive, toRefs } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { ipcRenderer } from "electron";
 
 type IActive = string;
 
@@ -34,6 +35,12 @@ export default {
     const handleSelect = (index: string): void => {
       console.log(index);
     };
+    onMounted(() => {
+      ipcRenderer.on("toast-reply", (event, arg) => {
+        console.log(arg); // prints "pong"
+      });
+      ipcRenderer.send("toast-message", "ping");
+    });
     return {
       active,
       handleSelect,
