@@ -1,30 +1,57 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <el-container>
+    <el-header class="app-header">
+      <el-badge class="app-title">任务清单</el-badge>
+      <el-menu
+        :default-active="active"
+        mode="horizontal"
+        @select="handleSelect"
+        class="menu"
+      >
+        <el-menu-item index="1">首页</el-menu-item>
+        <el-menu-item index="2">清单</el-menu-item>
+      </el-menu>
+    </el-header>
+  </el-container>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { ref } from "vue";
 
-#nav {
-  padding: 30px;
-}
+type IActive = string;
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  setup() {
+    const active = ref<IActive>("1");
+    const handleSelect = () => {};
+    return {
+      active,
+      handleSelect,
+    };
+  },
+};
+</script>
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+<style lang="less">
+* {
+  margin: 0;
+  padding: 0;
+}
+.app-header {
+  height: 50px;
+  background: #ffffff;
+  border-bottom: 1px solid #ededed;
+  align-items: center;
+  display: flex;
+  .app-title {
+    font-size: 22px;
+    margin-right: 30px;
+  }
+  .menu {
+    width: auto;
+    min-width: 200px;
+    background: none;
+    border-bottom: none;
+  }
 }
 </style>
