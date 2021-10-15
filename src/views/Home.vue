@@ -9,7 +9,7 @@
               <span class="number">50</span>
             </div>
           </template>
-          <task-all />
+          <task-all class="min-height" />
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -20,7 +20,7 @@
               <span class="number">50</span>
             </div>
           </template>
-          <today-done />
+          <today-done class="min-height" />
         </el-card>
       </el-col>
     </el-row>
@@ -44,6 +44,9 @@ export default defineComponent({
 <style lang="less" scoped>
 .home {
   padding: 20px;
+  .min-height {
+    min-height: 350px;
+  }
   .card-header {
     font-weight: bolder;
     display: flex;
