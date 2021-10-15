@@ -21,7 +21,7 @@
     <el-drawer
       v-model="showDrawer"
       title="新建任务"
-      :direction="rtl"
+      :direction="'rtl'"
       size="40%"
     >
       <create-case></create-case>

@@ -12,7 +12,6 @@ type EChartsType = echarts.EChartsType;
 interface INumberObj {
   open: number;
   done: number;
-  doing: number;
 }
 
 export default {
@@ -21,7 +20,6 @@ export default {
     const numberObj = reactive<INumberObj>({
       open: 0,
       done: 0,
-      doing: 0,
     });
     const options = reactive<EChartsOption>({
       title: {
@@ -44,7 +42,6 @@ export default {
           data: [
             { value: numberObj.done, name: "已完成" },
             { value: numberObj.open, name: "未完成" },
-            { value: numberObj.doing, name: "进行中" },
           ],
           emphasis: {
             itemStyle: {

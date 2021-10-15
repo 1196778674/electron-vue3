@@ -6,7 +6,7 @@
           <template #header>
             <div class="card-header">
               <span>任务总数</span>
-              <span class="number">50</span>
+              <span class="number">{{ all }}</span>
             </div>
           </template>
           <task-all class="min-height" />
@@ -16,8 +16,8 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>今日待完成</span>
-              <span class="number">50</span>
+              <span>待完成</span>
+              <span class="number">{{ pending }}</span>
             </div>
           </template>
           <today-done class="min-height" />
@@ -29,8 +29,8 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>已完成任务</span>
-              <span class="number">50</span>
+              <span>已完成</span>
+              <span class="number">{{ done }}</span>
             </div>
           </template>
           <task-all class="min-height" />
@@ -41,10 +41,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, reactive, toRefs, ComputedRef } from "vue";
+import { useStore } from "vuex";
+
 import TaskAll from "../components/TaskAll.vue";
 import TodayDone from "../components/TodayDone.vue";
 import TodayDoing from "../components/TodayDoing.vue";
+
+interface IState {
+  all: ComputedRef<number>;
+  done: number;
+  pending: number;
+}
 
 export default defineComponent({
   name: "Home",
@@ -52,6 +60,20 @@ export default defineComponent({
     TaskAll,
     TodayDone,
     TodayDoing,
+  },
+  setup(props) {
+    const store = useStore();
+
+    const state = reactive<IState>({
+      all: computed(() => store.state.localList.length),
+      done: 10,
+      pending: 14,
+    });
+
+    return {
+      props,
+      ...toRefs(state),
+    };
   },
 });
 </script>
