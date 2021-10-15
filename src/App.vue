@@ -2,7 +2,7 @@
   <el-container>
     <el-header class="app-header">
       <el-badge class="app-title">任务清单</el-badge>
-      <el-menu
+      <!--<el-menu
         :default-active="active"
         mode="horizontal"
         @select="handleSelect"
@@ -14,9 +14,18 @@
         <el-menu-item index="/list">
           <router-link to="/list">清单</router-link>
         </el-menu-item>
-      </el-menu>
+      </el-menu> -->
+      <el-button type="primary" @click="createCase">新建任务</el-button>
     </el-header>
     <router-view />
+    <el-drawer
+      v-model="showDrawer"
+      title="新建任务"
+      :direction="rtl"
+      size="40%"
+    >
+      <create-case></create-case>
+    </el-drawer>
   </el-container>
 </template>
 
@@ -24,16 +33,24 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
+import CreateCase from "./components/CreateCase.vue";
 
 type IActive = string;
 
 export default {
+  components: {
+    CreateCase,
+  },
   setup() {
     const useRouterCurrent = reactive(useRouter());
     const path = useRouterCurrent.options.history.location;
     const active = ref<IActive>(path || "/");
     const handleSelect = (index: string): void => {
       console.log(index);
+    };
+    const showDrawer = ref<boolean>(false);
+    const createCase = () => {
+      showDrawer.value = true;
     };
     onMounted(() => {
       ipcRenderer.on("toast-reply", (event, arg) => {
@@ -42,8 +59,10 @@ export default {
       ipcRenderer.send("toast-message", "ping");
     });
     return {
+      showDrawer,
       active,
       handleSelect,
+      createCase,
     };
   },
 };
@@ -53,6 +72,12 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+.el-drawer__header {
+  border-bottom: 1px solid #ededed;
+  margin: 0 !important;
+  padding-bottom: 30px !important;
+  color: #444;
 }
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
 .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
@@ -64,6 +89,7 @@ export default {
   border-bottom: 1px solid #ededed;
   align-items: center;
   display: flex;
+  justify-content: space-between;
   .app-title {
     font-size: 22px;
     margin-right: 30px;

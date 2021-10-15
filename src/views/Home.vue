@@ -16,11 +16,24 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>今日完成</span>
+              <span>今日待完成</span>
               <span class="number">50</span>
             </div>
           </template>
           <today-done class="min-height" />
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="24" style="margin-top: 20px">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <div class="card-header">
+              <span>已完成任务</span>
+              <span class="number">50</span>
+            </div>
+          </template>
+          <task-all class="min-height" />
         </el-card>
       </el-col>
     </el-row>
@@ -31,12 +44,14 @@
 import { defineComponent } from "vue";
 import TaskAll from "../components/TaskAll.vue";
 import TodayDone from "../components/TodayDone.vue";
+import TodayDoing from "../components/TodayDoing.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
     TaskAll,
     TodayDone,
+    TodayDoing,
   },
 });
 </script>
