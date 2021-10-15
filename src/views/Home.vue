@@ -16,11 +16,11 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>待完成</span>
-              <span class="number">{{ pending.length }}</span>
+              <span>进行中</span>
+              <span class="number">{{ doing.length }}</span>
             </div>
           </template>
-          <today-doing class="min-height" />
+          <today-doing class="min-height" :list="doing" />
         </el-card>
       </el-col>
     </el-row>
@@ -33,7 +33,7 @@
               <span class="number">{{ done.length }}</span>
             </div>
           </template>
-          <today-done class="min-height" />
+          <today-done class="min-height" :list="done" />
         </el-card>
       </el-col>
     </el-row>
@@ -51,7 +51,7 @@ import TodayDoing from "../components/TodayDoing.vue";
 interface IState {
   localList: ComputedRef;
   done: ComputedRef;
-  pending: ComputedRef;
+  doing: ComputedRef;
 }
 
 export default defineComponent({
@@ -69,7 +69,7 @@ export default defineComponent({
       done: computed(() =>
         store.state.localList.filter((v: any) => v.type === 1)
       ),
-      pending: computed(() =>
+      doing: computed(() =>
         store.state.localList.filter((v: any) => v.type === 0)
       ),
     });

@@ -10,6 +10,11 @@ import { reactive, toRefs } from "vue";
 
 export default {
   name: "TodayDone",
+  props: {
+    list: {
+      type: () => [],
+    },
+  },
   setup() {
     const state = reactive({
       count: 0,
