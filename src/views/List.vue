@@ -1,5 +1,22 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <div>{{ msg }}</div>
 </template>
+
+
+<script lang="ts">
+import { ref, reactive } from "vue";
+export default {
+  name: "List",
+  setup(props) {
+    const msg = ref("list");
+
+    return {
+      msg,
+      props,
+    };
+  },
+};
+</script>
+
+<style lang="less" scoped>
+</style>
