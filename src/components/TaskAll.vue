@@ -3,23 +3,24 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, onMounted, toRefs } from "vue";
+import { reactive, onMounted, toRefs, ComputedRef, computed } from "vue";
 import * as echarts from "echarts";
 
 type EChartsOption = echarts.EChartsOption;
 type EChartsType = echarts.EChartsType;
 
 interface INumberObj {
-  open: number;
-  done: number;
+  open: ComputedRef<number>;
+  done: ComputedRef<number>;
 }
 
 export default {
   name: "TaskAll",
+  props: ["list"],
   setup(props: any) {
     const numberObj = reactive<INumberObj>({
-      open: 0,
-      done: 0,
+      open: computed(() => props.list.filter((v: any) => v.type === 0).length),
+      done: computed(() => props.list.filter((v: any) => v.type === 1).length),
     });
     const options = reactive<EChartsOption>({
       title: {
@@ -59,7 +60,6 @@ export default {
       const Chart: EChartsType = echarts.init(charts) as EChartsType;
       options && Chart.setOption(options);
     });
-
     return {
       ...toRefs(numberObj),
       options,

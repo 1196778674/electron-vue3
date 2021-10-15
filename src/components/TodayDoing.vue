@@ -6,7 +6,7 @@
 import { reactive, toRefs } from "vue";
 
 export default {
-  name: "TodayCreat",
+  name: "TodayDoing",
   setup() {
     const state = reactive({
       count: 0,

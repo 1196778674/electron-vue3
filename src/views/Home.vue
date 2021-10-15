@@ -6,10 +6,10 @@
           <template #header>
             <div class="card-header">
               <span>任务总数</span>
-              <span class="number">{{ all }}</span>
+              <span class="number">{{ localList.length }}</span>
             </div>
           </template>
-          <task-all class="min-height" />
+          <task-all class="min-height" :list="localList" />
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -17,10 +17,10 @@
           <template #header>
             <div class="card-header">
               <span>待完成</span>
-              <span class="number">{{ pending }}</span>
+              <span class="number">{{ pending.length }}</span>
             </div>
           </template>
-          <today-done class="min-height" />
+          <today-doing class="min-height" />
         </el-card>
       </el-col>
     </el-row>
@@ -30,10 +30,10 @@
           <template #header>
             <div class="card-header">
               <span>已完成</span>
-              <span class="number">{{ done }}</span>
+              <span class="number">{{ done.length }}</span>
             </div>
           </template>
-          <task-all class="min-height" />
+          <today-done class="min-height" />
         </el-card>
       </el-col>
     </el-row>
@@ -49,9 +49,9 @@ import TodayDone from "../components/TodayDone.vue";
 import TodayDoing from "../components/TodayDoing.vue";
 
 interface IState {
-  all: ComputedRef<number>;
-  done: number;
-  pending: number;
+  localList: ComputedRef;
+  done: ComputedRef;
+  pending: ComputedRef;
 }
 
 export default defineComponent({
@@ -65,12 +65,17 @@ export default defineComponent({
     const store = useStore();
 
     const state = reactive<IState>({
-      all: computed(() => store.state.localList.length),
-      done: 10,
-      pending: 14,
+      localList: computed(() => store.state.localList),
+      done: computed(() =>
+        store.state.localList.filter((v: any) => v.type === 1)
+      ),
+      pending: computed(() =>
+        store.state.localList.filter((v: any) => v.type === 0)
+      ),
     });
 
     return {
+      store,
       props,
       ...toRefs(state),
     };
