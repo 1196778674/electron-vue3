@@ -24,7 +24,7 @@
       :direction="'rtl'"
       size="40%"
     >
-      <create-case></create-case>
+      <create-case @closeCase="closeCase"></create-case>
     </el-drawer>
   </el-container>
 </template>
@@ -52,6 +52,9 @@ export default {
     const createCase = () => {
       showDrawer.value = true;
     };
+    const closeCase = () => {
+      showDrawer.value = false;
+    };
     onMounted(() => {
       ipcRenderer.on("toast-reply", (event, arg) => {
         console.log(arg); // prints "pong"
@@ -63,6 +66,7 @@ export default {
       active,
       handleSelect,
       createCase,
+      closeCase,
     };
   },
 };

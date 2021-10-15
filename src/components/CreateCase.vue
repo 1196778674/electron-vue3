@@ -43,7 +43,7 @@ interface IForm {
 
 export default {
   name: "CreateCase",
-  setup() {
+  setup(props: any, context: any) {
     const form = reactive<IForm>({
       name: "",
       times: [],
@@ -55,30 +55,33 @@ export default {
     const store = useStore();
 
     const onSubmit = (): void => {
-      //   if (!form.name) {
-      //     ElNotification({
-      //       title: "提示",
-      //       type: "warning",
-      //       message: "请输入任务标题~~",
-      //     });
-      //     return;
-      //   }
-      //   if (!form.times[0]) {
-      //     ElNotification({
-      //       title: "提示",
-      //       type: "warning",
-      //       message: "请选择开始结束时间~~",
-      //     });
-      //     return;
-      //   }
+      if (!form.name) {
+        ElNotification({
+          title: "提示",
+          type: "warning",
+          message: "请输入任务标题~~",
+        });
+        return;
+      }
+      if (!form.times[0]) {
+        ElNotification({
+          title: "提示",
+          type: "warning",
+          message: "请选择开始结束时间~~",
+        });
+        return;
+      }
       const times = form.times.map((v) => v.valueOf());
       const newForm = Object.assign({}, form, { times: times });
       store.commit("saveLocalList", newForm);
+      context.emit("closeCase");
     };
 
     return {
       onSubmit,
       ...toRefs(form),
+      props,
+      context,
     };
   },
 };
