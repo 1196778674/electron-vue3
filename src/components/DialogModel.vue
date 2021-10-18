@@ -1,5 +1,9 @@
 <template>
-  <el-dialog v-model="outerVisible" title="任务详情">
+  <el-dialog
+    v-model="outerVisible"
+    title="任务详情"
+    :before-close="closeDialog"
+  >
     <template #default>
       <div class="discription">
         <ul>
@@ -15,12 +19,20 @@
           <li>
             任务描述：<span>{{ rowData.desc }}</span>
           </li>
+          <li>
+            是否完成：<el-button
+              size="small"
+              type="primary"
+              @click="dialogDone(rowData.id)"
+              >完成</el-button
+            >
+          </li>
         </ul>
       </div>
     </template>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="closeDialog">确定</el-button>
+        <el-button type="default" @click="closeDialog">确定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -47,11 +59,17 @@ export default {
     };
     const dateFormat = (time: number) =>
       moment(time).format("YYYY-MM-DD HH-MM-SS");
+
+    const dialogDone = (id: number) => {
+      context.emit("dialogDone", id);
+      closeDialog();
+    };
     return {
       rowData,
       closeDialog,
       context,
       outerVisible,
+      dialogDone,
       ...toRefs(props),
       dateFormat,
     };

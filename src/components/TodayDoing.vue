@@ -49,6 +49,7 @@
     :outerVisible="outerVisible"
     :rowData="rowData"
     @closeDialog="closeDialog"
+    @dialogDone="dialogDone"
   ></dialog-model>
 </template>
 
@@ -90,6 +91,10 @@ export default {
       state.outerVisible = close;
     };
 
+    const dialogDone = (id: number) => {
+      store.commit("doneLocalList", id);
+    };
+
     const handleDelete = (index: number, row: { id: number }) => {
       const id = row.id;
       ElMessageBox.confirm("确定删除这条任务？", {
@@ -109,6 +114,7 @@ export default {
       moment(time).format("YYYY-MM-DD HH-MM-SS");
 
     return {
+      dialogDone,
       handleEdit,
       handleDelete,
       dateFormat,

@@ -1,5 +1,10 @@
 import { createStore } from 'vuex'
 
+const reloadList = (state: any) => {
+  window.localStorage.removeItem('localList')
+      window.localStorage.setItem('localList', JSON.stringify(state.localList))
+}
+
 export default createStore({
   state: {
     id: JSON.parse((window as any).localStorage.getItem('localId') || 0),
@@ -14,8 +19,16 @@ export default createStore({
     },
     deleteLocalList (state, id) {
       state.localList = state.localList.filter((v: any) => v.id !== id)
-      window.localStorage.removeItem('localList')
-      window.localStorage.setItem('localList', JSON.stringify(state.localList))
+      reloadList(state)
+    },
+    doneLocalList (state, id) {
+      state.localList = state.localList.map((v: any) => {
+        if(v.id === id) {
+          v.type = 1
+        }
+        return v
+      })
+      reloadList(state)
     }
   },
   actions: {
@@ -23,3 +36,4 @@ export default createStore({
   modules: {
   }
 })
+
