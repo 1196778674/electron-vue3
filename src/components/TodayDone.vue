@@ -41,7 +41,8 @@ export default {
       lists: computed(() => props.list),
     });
 
-    const dateFormat = (time: number) => moment(time).format("YYYY-MM-DD");
+    const dateFormat = (time: number) =>
+      moment(time).format("YYYY-MM-DD HH-MM-SS");
 
     return {
       dateFormat,

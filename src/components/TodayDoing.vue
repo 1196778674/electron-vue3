@@ -11,6 +11,7 @@
     style="width: 100%; max-height: 350px; overflow-y: scroll"
   >
     <el-table-column label="任务名称" prop="name" fixed width="200" />
+    <el-table-column label="任务描述" prop="desc" width="250" />
     <el-table-column label="开始时间" width="200">
       <template #default="scope">
         <i class="el-icon-time"></i>
@@ -27,7 +28,6 @@
         }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="任务描述" prop="desc" width="250" />
     <el-table-column fixed="right" width="150">
       <!-- <template #header>
         <el-input v-model="search" size="mini" placeholder="搜索" />
@@ -45,6 +45,11 @@
       </template>
     </el-table-column>
   </el-table>
+  <dialog-model
+    :outerVisible="outerVisible"
+    :rowData="rowData"
+    @closeDialog="closeDialog"
+  ></dialog-model>
 </template>
 
 <script lang="ts">
@@ -53,6 +58,8 @@ import moment from "moment";
 import { useStore } from "vuex";
 import { ElMessageBox } from "element-plus";
 
+import DialogModel from "../components/DialogModel.vue";
+
 export default {
   name: "TodayDoing",
   props: {
@@ -60,15 +67,27 @@ export default {
       type: () => [],
     },
   },
+  components: { DialogModel },
   setup(props: any) {
-    const state = reactive<{ tableData: ComputedRef }>({
+    const state = reactive<{
+      tableData: ComputedRef;
+      outerVisible: boolean;
+      rowData: {};
+    }>({
       tableData: computed(() => props.list),
+      // 展示弹框
+      outerVisible: false,
+      rowData: {},
     });
 
     const store = useStore();
     const handleEdit = (index: number, row: { id: number }) => {
-      const id = row.id;
-      console.log(row.id);
+      state.rowData = row;
+      state.outerVisible = true;
+    };
+
+    const closeDialog = (close: boolean) => {
+      state.outerVisible = close;
     };
 
     const handleDelete = (index: number, row: { id: number }) => {
@@ -86,12 +105,14 @@ export default {
         });
     };
 
-    const dateFormat = (time: number) => moment(time).format("YYYY-MM-DD");
+    const dateFormat = (time: number) =>
+      moment(time).format("YYYY-MM-DD HH-MM-SS");
 
     return {
       handleEdit,
       handleDelete,
       dateFormat,
+      closeDialog,
       ...toRefs(state),
       props,
     };
