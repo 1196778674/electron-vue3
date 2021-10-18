@@ -29,6 +29,15 @@ export default createStore({
         return v
       })
       reloadList(state)
+    },
+    restartCase (state,id) {
+      state.localList = state.localList.map((v: any) => {
+        if(v.id === id) {
+          v.type = 0
+        }
+        return v
+      })
+      reloadList(state)
     }
   },
   actions: {

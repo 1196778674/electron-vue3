@@ -24,6 +24,16 @@
         </template>
       </el-table-column>
       <el-table-column label="任务描述" prop="desc" width="" />
+      <el-table-column fixed="right" label="操作" width="150">
+        <template #default="scope">
+          <el-button
+            size="mini"
+            type="success"
+            @click="openCase(scope.$index, scope.row)"
+            >重新开启</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <el-empty v-else description="暂无数据"></el-empty>
   </div>
@@ -32,6 +42,7 @@
 <script lang="ts">
 import { reactive, toRefs, computed } from "vue";
 import moment from "moment";
+import { useStore } from "vuex";
 
 export default {
   name: "TodayDone",
@@ -41,10 +52,17 @@ export default {
       lists: computed(() => props.list),
     });
 
+    const store = useStore();
+
+    const openCase = (index: number, row: { id: number }) => {
+      store.commit("restartCase", row.id);
+    };
+
     const dateFormat = (time: number) =>
       moment(time).format("YYYY-MM-DD HH-MM-SS");
 
     return {
+      openCase,
       dateFormat,
       ...toRefs(state),
     };
