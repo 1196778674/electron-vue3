@@ -10,13 +10,7 @@
     height="350"
     style="width: 100%; max-height: 350px; overflow-y: scroll"
   >
-    <el-table-column
-      label="任务名称"
-      prop="name"
-      fixed
-      width="100"
-      style="overflow: hidden"
-    />
+    <el-table-column label="任务名称" prop="name" fixed width="200" />
     <el-table-column label="开始时间" width="200">
       <template #default="scope">
         <i class="el-icon-time"></i>
@@ -91,4 +85,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.el-table td.el-table__cell div {
+  max-width: 100%;
+  height: 29px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

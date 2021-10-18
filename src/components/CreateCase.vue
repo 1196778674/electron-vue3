@@ -72,7 +72,10 @@ export default {
         return;
       }
       const times = form.times.map((v) => v.valueOf());
-      const newForm = Object.assign({}, form, { times: times });
+      const newForm = Object.assign({}, form, {
+        times: times,
+        id: store.state.id,
+      });
       store.commit("saveLocalList", newForm);
       context.emit("closeCase");
     };
