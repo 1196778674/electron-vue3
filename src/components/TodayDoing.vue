@@ -51,6 +51,7 @@
 import { reactive, toRefs, computed, ComputedRef } from "vue";
 import moment from "moment";
 import { useStore } from "vuex";
+import { ElMessageBox } from "element-plus";
 
 export default {
   name: "TodayDoing",
@@ -72,7 +73,17 @@ export default {
 
     const handleDelete = (index: number, row: { id: number }) => {
       const id = row.id;
-      store.commit("deleteLocalList", id);
+      ElMessageBox.confirm("确定删除这条任务？", {
+        confirmButtonText: "删除",
+        cancelButtonText: "我再想想",
+        type: "warning",
+      })
+        .then(() => {
+          store.commit("deleteLocalList", id);
+        })
+        .catch(() => {
+          // catch error
+        });
     };
 
     const dateFormat = (time: number) => moment(time).format("YYYY-MM-DD");

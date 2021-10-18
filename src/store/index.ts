@@ -13,9 +13,9 @@ export default createStore({
       window.localStorage.setItem('localId', JSON.stringify(state.id))
     },
     deleteLocalList (state, id) {
-      console.log('====================================');
-      console.log(state, id);
-      console.log('====================================');
+      state.localList = state.localList.filter((v: any) => v.id !== id)
+      window.localStorage.removeItem('localList')
+      window.localStorage.setItem('localList', JSON.stringify(state.localList))
     }
   },
   actions: {

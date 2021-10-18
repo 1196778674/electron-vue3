@@ -11,7 +11,12 @@
     </el-progress>
     <el-divider></el-divider>
     <div class="title">今日完成</div>
-    <el-progress class="progress" type="dashboard" :percentage="percentage">
+    <el-progress
+      class="progress"
+      :stroke-width="10"
+      type="dashboard"
+      :percentage="percentage"
+    >
       <template #default="{ percentage }">
         <span class="percentage-value">{{ percentage }}%</span>
         <span class="percentage-label">今日完成度</span>
@@ -21,18 +26,29 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, computed, onBeforeMount } from "vue";
 
 export default {
   name: "CaseProgress",
-  props: ["localList"],
+  props: ["list"],
   setup(props: any) {
     const state = reactive({
-      percentage: 100,
+      percentage: computed(() =>
+        (
+          (props.list.filter((v: { type: number }) => v.type === 1).length /
+            props.list.length) *
+          100
+        ).toFixed(2)
+      ),
+      all: computed(() => props.list.length),
+      now: new Date().valueOf(),
+      nowProcentage: 0,
+      nowAll: 0,
     });
 
     return {
       ...toRefs(state),
+      props,
     };
   },
 };
