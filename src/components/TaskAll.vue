@@ -56,9 +56,14 @@ export default {
     });
 
     onMounted(() => {
-      const charts = document.getElementById("charts") as HTMLElement;
-      const Chart: EChartsType = echarts.init(charts) as EChartsType;
-      options && Chart.setOption(options);
+      setInterval(() => {
+        const charts = document.getElementById("charts") as HTMLElement;
+        const Chart: EChartsType = echarts.init(charts) as EChartsType;
+        options && Chart.setOption(options);
+        console.log("====================================");
+        console.log(options);
+        console.log("====================================");
+      }, 5000);
     });
     return {
       ...toRefs(numberObj),

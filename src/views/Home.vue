@@ -9,7 +9,7 @@
               <span class="number">{{ localList.length }}</span>
             </div>
           </template>
-          <task-all class="min-height" :list="localList" />
+          <case-progress class="min-height" :list="localList" />
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -44,7 +44,8 @@
 import { defineComponent, computed, reactive, toRefs, ComputedRef } from "vue";
 import { useStore } from "vuex";
 
-import TaskAll from "../components/TaskAll.vue";
+// import TaskAll from "../components/TaskAll.vue";
+import CaseProgress from "../components/CaseProgress.vue";
 import TodayDone from "../components/TodayDone.vue";
 import TodayDoing from "../components/TodayDoing.vue";
 
@@ -57,7 +58,7 @@ interface IState {
 export default defineComponent({
   name: "Home",
   components: {
-    TaskAll,
+    CaseProgress,
     TodayDone,
     TodayDoing,
   },

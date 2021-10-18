@@ -50,6 +50,7 @@
 <script lang="ts">
 import { reactive, toRefs, computed, ComputedRef } from "vue";
 import moment from "moment";
+import { useStore } from "vuex";
 
 export default {
   name: "TodayDoing",
@@ -63,12 +64,15 @@ export default {
       tableData: computed(() => props.list),
     });
 
-    const handleEdit = (index: number, row: {}) => {
-      console.log(index, row);
+    const store = useStore();
+    const handleEdit = (index: number, row: { id: number }) => {
+      const id = row.id;
+      console.log(row.id);
     };
 
-    const handleDelete = (index: number, row: {}) => {
-      console.log(index, row);
+    const handleDelete = (index: number, row: { id: number }) => {
+      const id = row.id;
+      store.commit("deleteLocalList", id);
     };
 
     const dateFormat = (time: number) => moment(time).format("YYYY-MM-DD");

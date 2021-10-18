@@ -11,6 +11,11 @@ export default createStore({
       state.localList.push(data as never)
       window.localStorage.setItem('localList', JSON.stringify(state.localList))
       window.localStorage.setItem('localId', JSON.stringify(state.id))
+    },
+    deleteLocalList (state, id) {
+      console.log('====================================');
+      console.log(state, id);
+      console.log('====================================');
     }
   },
   actions: {
