@@ -15,7 +15,11 @@
           <router-link to="/list">清单</router-link>
         </el-menu-item>
       </el-menu> -->
-      <el-button type="primary" @click="createCase">新建任务</el-button>
+      <div>
+        <el-button type="warning" @click="exportCase">导出任务</el-button>
+        <el-button type="success" @click="importCase">导入任务</el-button>
+        <el-button type="primary" @click="createCase">新建任务</el-button>
+      </div>
     </el-header>
     <router-view />
     <el-drawer
@@ -33,6 +37,8 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
+import { useStore } from "vuex";
+import { ElNotification } from "element-plus";
 import CreateCase from "./components/CreateCase.vue";
 
 type IActive = string;
@@ -55,13 +61,29 @@ export default {
     const closeCase = () => {
       showDrawer.value = false;
     };
+
+    const store = useStore();
+    const exportCase = () => {
+      ipcRenderer.send("exportFun", JSON.stringify(store.state));
+    };
+
+    const importCase = () => {
+      ipcRenderer.send("importFun");
+    };
+
     onMounted(() => {
-      ipcRenderer.on("toast-reply", (event, arg) => {
-        console.log(arg); // prints "pong"
+      // ipcRenderer.on("toast-reply", (event, arg) => {
+      //   console.log(arg); // prints "pong"
+      // });
+      // ipcRenderer.send("toast-message", "ping");
+
+      ipcRenderer.on("import-reply", (event, arg) => {
+        store.commit("importObj", arg);
       });
-      ipcRenderer.send("toast-message", "ping");
     });
     return {
+      exportCase,
+      importCase,
       showDrawer,
       active,
       handleSelect,

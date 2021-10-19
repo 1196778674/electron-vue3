@@ -2,20 +2,21 @@ import { createStore } from 'vuex'
 
 const reloadList = (state: any) => {
   window.localStorage.removeItem('localList')
-      window.localStorage.setItem('localList', JSON.stringify(state.localList))
+  window.localStorage.setItem('localList', JSON.stringify(state.localList))
+  window.localStorage.setItem('localId', JSON.stringify(state.localId))
 }
 
 export default createStore({
   state: {
-    id: JSON.parse((window as any).localStorage.getItem('localId') || 0),
-    localList: JSON.parse((window as any).localStorage.getItem('localList')) || []
+    localId: !!(window as any).localStorage.getItem('localId') ? JSON.parse((window as any).localStorage.getItem('localId')) : 0,
+    localList: !!(window as any).localStorage.getItem('localList') && JSON.parse((window as any).localStorage.getItem('localList')) || []
   },
   mutations: {
     saveLocalList (state, data) {
-      state.id++
+      state.localId++
       state.localList.push(data as never)
       window.localStorage.setItem('localList', JSON.stringify(state.localList))
-      window.localStorage.setItem('localId', JSON.stringify(state.id))
+      window.localStorage.setItem('localId', JSON.stringify(state.localId))
     },
     deleteLocalList (state, id) {
       state.localList = state.localList.filter((v: any) => v.id !== id)
@@ -37,6 +38,12 @@ export default createStore({
         }
         return v
       })
+      reloadList(state)
+    },
+    importObj (state, objs) {
+      const obj = JSON.parse(objs);
+      state.localList = obj.localList;
+      state.localId = obj.localId
       reloadList(state)
     }
   },

@@ -34,13 +34,14 @@ export default {
   setup(props: any) {
     const state = reactive({
       percentage: computed(() =>
-        (
-          (props.list.filter((v: { type: number }) => v.type === 1).length /
-            props.list.length) *
-          100
-        ).toFixed(2)
+        (!!props.list
+          ? (props.list.filter((v: { type: number }) => v.type === 1).length /
+              props.list.length) *
+            100
+          : 0
+        ).toFixed(0)
       ),
-      all: computed(() => props.list.length),
+      all: computed(() => props.list?.length || 0),
       now: new Date().valueOf(),
       nowProcentage: 0,
       nowAll: 0,

@@ -1,8 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Notification, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, Notification, ipcMain, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import fs from 'fs'
+import path, { resolve } from 'path'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 
@@ -76,6 +79,40 @@ app.on('ready', async () => {
       })
       toast.show()
     }, 3000);
+  })
+
+  ipcMain.on('exportFun', (event, arg) => {
+
+    const filters = [
+      {
+          name: 'export',
+          extensions: ['md'] // 文件后缀名类型， 如md
+      }
+    ]
+    const filePath = dialog.showSaveDialog({
+      filters,
+      defaultPath: 'export',
+      title: '导出',
+      buttonLabel: '导出'
+    })
+    fs.writeFileSync(`${resolve('../../Downloads/export.md')}`, arg, 'utf8')
+  })
+
+  ipcMain.on('importFun', (event, arg) => {
+    dialog.showOpenDialog({
+        filters: [
+            {
+                name: 'MD文件',
+                extensions: ['md']
+            }
+        ],
+        properties: ['openFile'],
+        message: '选择要导入的Mackdown文件',
+        buttonLabel: '导入'
+    }).then(res => {
+      const data = fs.readFileSync(res.filePaths[0])
+      event.reply('import-reply', data.toString())
+    })
   })
 
 // Exit cleanly on request from parent process in development mode.

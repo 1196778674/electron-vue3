@@ -7,7 +7,7 @@
 import { ref, reactive } from "vue";
 export default {
   name: "List",
-  setup(props) {
+  setup(props: any) {
     const msg = ref("list");
 
     return {
