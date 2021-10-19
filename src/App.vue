@@ -21,7 +21,8 @@
         <el-button type="primary" @click="createCase">新建任务</el-button>
       </div>
     </el-header>
-    <router-view />
+    <!-- <router-view /> -->
+    <v-home></v-home>
     <el-drawer
       v-model="showDrawer"
       title="新建任务"
@@ -38,7 +39,8 @@ import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
 import { useStore } from "vuex";
-import { ElNotification } from "element-plus";
+
+import VHome from "./views/Home.vue";
 import CreateCase from "./components/CreateCase.vue";
 
 type IActive = string;
@@ -46,6 +48,7 @@ type IActive = string;
 export default {
   components: {
     CreateCase,
+    VHome,
   },
   setup() {
     const useRouterCurrent = reactive(useRouter());
