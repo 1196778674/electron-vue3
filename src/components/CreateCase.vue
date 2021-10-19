@@ -78,6 +78,13 @@ export default {
       });
       store.commit("saveLocalList", newForm);
       context.emit("closeCase");
+      Object.assign(form, {
+        name: "",
+        times: [],
+        tips: false,
+        desc: "",
+        type: 0,
+      });
     };
 
     return {
