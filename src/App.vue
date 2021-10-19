@@ -38,7 +38,9 @@
 import { ref, reactive, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
+import moment from "moment";
 import { useStore } from "vuex";
+import { ElNotification } from "element-plus";
 
 import VHome from "./views/Home.vue";
 import CreateCase from "./components/CreateCase.vue";
@@ -59,7 +61,19 @@ export default {
       console.log(index);
     };
     const showDrawer = ref<boolean>(false);
-    const lists = ref(computed(() => store.state.localList));
+
+    watch(
+      store.state.localList,
+      (lists) => {
+        ipcRenderer.send(
+          "watch-lists",
+          JSON.stringify(lists.filter((v: any) => v.tips))
+        );
+      },
+      {
+        immediate: true,
+      }
+    );
 
     const createCase = () => {
       showDrawer.value = true;
@@ -76,16 +90,31 @@ export default {
       ipcRenderer.send("importFun");
     };
 
+    const timeFun = (time: number) => {
+      return moment(time).format("YYYY-MM-DD HH:mm:ss");
+    };
+
     onMounted(() => {
-      ipcRenderer.on("toast-reply", (event, arg) => {
-        console.log(arg); // prints "pong"
-      });
+      // ipcRenderer.on("toast-reply", (event, arg) => {
+      //   console.log(arg); // prints "pong"
+      // });
 
       ipcRenderer.on("import-reply", (event, arg) => {
         store.commit("importObj", arg);
       });
+
+      ipcRenderer.on("watch-reply", (event, arg) => {
+        const obj = arg;
+        ElNotification({
+          title: "提示",
+          type: "warning",
+          message: `${obj.name}将于${timeFun(obj.times[1])}到期，请尽快处理`,
+          duration: 0,
+        });
+      });
     });
     return {
+      timeFun,
       exportCase,
       importCase,
       showDrawer,

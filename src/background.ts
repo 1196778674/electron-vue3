@@ -38,6 +38,7 @@ async function createWindow() {
     win.loadURL('app://./index.html')
     // win.webContents.openDevTools()
   }
+
 }
 
 // Quit when all windows are closed.
@@ -82,11 +83,21 @@ app.on('ready', async () => {
     }, 3000);
   })
 
-  ipcMain.on('watch-tips', (event, arg) => {
-    // const list = arg.filter((v: any) => v.tips === 1)
-    console.log('====================================');
-    console.log(arg);
-    console.log('====================================');
+  ipcMain.on('watch-lists', (event, arg) => {
+    let interval: any = null
+    let now: number = 0
+    let list: number[] = []
+    interval = setInterval(() => {
+      now = (new Date()).valueOf()
+      JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
+        if(Math.abs(v.times[1] - now) <= 1000 * 60 * 10) {
+          !list.includes(v.localId) && event.reply('watch-reply', v) || list.push(v.localId)
+        }
+      });
+      if(list.length === JSON.parse(arg).length) {
+        clearInterval(interval)
+      }
+    },1000)
   })
 
   ipcMain.on('exportFun', (event, arg) => {
@@ -101,10 +112,13 @@ app.on('ready', async () => {
       filters,
       defaultPath: 'export',
       title: '导出',
-      buttonLabel: '导出'
+      buttonLabel: '导出',
     })
-    const app_path = app.getPath('desktop')
-    fs.writeFileSync(`${app_path}/export.md`, arg, 'utf8')
+    filePath.then(res => {
+      const app_path = app.getPath('desktop')
+      fs.writeFileSync(`${app_path}/export.md`, arg, 'utf8')
+    })
+    
     // event.reply('toast-reply', `${app_path}/export.md`)
   })
 
