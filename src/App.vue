@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
 import { useStore } from "vuex";
@@ -51,6 +51,7 @@ export default {
     VHome,
   },
   setup() {
+    const store = useStore();
     const useRouterCurrent = reactive(useRouter());
     const path = useRouterCurrent.options.history.location;
     const active = ref<IActive>(path || "/");
@@ -58,6 +59,8 @@ export default {
       console.log(index);
     };
     const showDrawer = ref<boolean>(false);
+    const lists = ref(computed(() => store.state.localList));
+
     const createCase = () => {
       showDrawer.value = true;
     };
@@ -65,7 +68,6 @@ export default {
       showDrawer.value = false;
     };
 
-    const store = useStore();
     const exportCase = () => {
       ipcRenderer.send("exportFun", JSON.stringify(store.state));
     };
@@ -75,10 +77,9 @@ export default {
     };
 
     onMounted(() => {
-      // ipcRenderer.on("toast-reply", (event, arg) => {
-      //   console.log(arg); // prints "pong"
-      // });
-      // ipcRenderer.send("toast-message", "ping");
+      ipcRenderer.on("tips-reply", (event, arg) => {
+        console.log(arg); // prints "pong"
+      });
 
       ipcRenderer.on("import-reply", (event, arg) => {
         store.commit("importObj", arg);

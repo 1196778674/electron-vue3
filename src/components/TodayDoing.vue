@@ -82,7 +82,7 @@ export default {
     });
 
     const store = useStore();
-    const handleEdit = (index: number, row: { id: number }) => {
+    const handleEdit = (index: number, row: { localId: number }) => {
       state.rowData = row;
       state.outerVisible = true;
     };
@@ -91,12 +91,12 @@ export default {
       state.outerVisible = close;
     };
 
-    const dialogDone = (id: number) => {
-      store.commit("doneLocalList", id);
+    const dialogDone = (localId: number) => {
+      store.commit("doneLocalList", localId);
     };
 
-    const handleDelete = (index: number, row: { id: number }) => {
-      const id = row.id;
+    const handleDelete = (index: number, row: { localId: number }) => {
+      const id = row.localId;
       ElMessageBox.confirm("确定删除这条任务？", {
         confirmButtonText: "删除",
         cancelButtonText: "我再想想",

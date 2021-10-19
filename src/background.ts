@@ -82,6 +82,13 @@ app.on('ready', async () => {
     }, 3000);
   })
 
+  ipcMain.on('watch-tips', (event, arg) => {
+    // const list = arg.filter((v: any) => v.tips === 1)
+    console.log('====================================');
+    console.log(arg);
+    console.log('====================================');
+  })
+
   ipcMain.on('exportFun', (event, arg) => {
 
     const filters = [
@@ -96,7 +103,9 @@ app.on('ready', async () => {
       title: '导出',
       buttonLabel: '导出'
     })
-    fs.writeFileSync(`${resolve('../../Downloads/export.md')}`, arg, 'utf8')
+    const app_path = app.getPath('desktop')
+    // event.reply('toast-reply', app_path)
+    fs.writeFileSync(resolve(`${app_path}`), arg, 'utf8')
   })
 
   ipcMain.on('importFun', (event, arg) => {

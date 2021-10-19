@@ -54,8 +54,8 @@ export default {
 
     const store = useStore();
 
-    const openCase = (index: number, row: { id: number }) => {
-      store.commit("restartCase", row.id);
+    const openCase = (index: number, row: { localId: number }) => {
+      store.commit("restartCase", row.localId);
     };
 
     const dateFormat = (time: number) =>

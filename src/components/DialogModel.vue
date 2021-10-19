@@ -23,7 +23,7 @@
             是否完成：<el-button
               size="small"
               type="primary"
-              @click="dialogDone(rowData.id)"
+              @click="dialogDone(rowData.localId)"
               >完成</el-button
             >
           </li>
@@ -60,8 +60,8 @@ export default {
     const dateFormat = (time: number) =>
       moment(time).format("YYYY-MM-DD HH:mm:ss");
 
-    const dialogDone = (id: number) => {
-      context.emit("dialogDone", id);
+    const dialogDone = (localId: number) => {
+      context.emit("dialogDone", localId);
       closeDialog();
     };
     return {

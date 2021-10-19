@@ -19,12 +19,12 @@ export default createStore({
       window.localStorage.setItem('localId', JSON.stringify(state.localId))
     },
     deleteLocalList (state, id) {
-      state.localList = state.localList.filter((v: any) => v.id !== id)
+      state.localList = state.localList.filter((v: any) => v.localId !== id)
       reloadList(state)
     },
     doneLocalList (state, id) {
       state.localList = state.localList.map((v: any) => {
-        if(v.id === id) {
+        if(v.localId === id) {
           v.type = 1
         }
         return v
@@ -33,7 +33,7 @@ export default createStore({
     },
     restartCase (state,id) {
       state.localList = state.localList.map((v: any) => {
-        if(v.id === id) {
+        if(v.localId === id) {
           v.type = 0
         }
         return v
