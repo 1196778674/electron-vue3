@@ -111,7 +111,7 @@ export default {
     };
 
     const dateFormat = (time: number) =>
-      moment(time).format("YYYY-MM-DD HH-MM-SS");
+      moment(time).format("YYYY-MM-DD HH:mm:ss");
 
     return {
       dialogDone,
