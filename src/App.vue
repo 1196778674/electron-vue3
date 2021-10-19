@@ -77,7 +77,7 @@ export default {
     };
 
     onMounted(() => {
-      ipcRenderer.on("tips-reply", (event, arg) => {
+      ipcRenderer.on("toast-reply", (event, arg) => {
         console.log(arg); // prints "pong"
       });
 

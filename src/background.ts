@@ -104,8 +104,8 @@ app.on('ready', async () => {
       buttonLabel: '导出'
     })
     const app_path = app.getPath('desktop')
-    // event.reply('toast-reply', app_path)
-    fs.writeFileSync(resolve(`${app_path}`), arg, 'utf8')
+    fs.writeFileSync(`${app_path}/export.md`, arg, 'utf8')
+    // event.reply('toast-reply', `${app_path}/export.md`)
   })
 
   ipcMain.on('importFun', (event, arg) => {
