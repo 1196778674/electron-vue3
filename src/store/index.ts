@@ -9,7 +9,8 @@ const reloadList = (state: any) => {
 export default createStore({
   state: {
     localId: !!(window as any).localStorage.getItem('localId') ? JSON.parse((window as any).localStorage.getItem('localId')) : 0,
-    localList: !!(window as any).localStorage.getItem('localList') && JSON.parse((window as any).localStorage.getItem('localList')) || []
+    localList: !!(window as any).localStorage.getItem('localList') && JSON.parse((window as any).localStorage.getItem('localList')) || [],
+    selectList: []
   },
   mutations: {
     saveLocalList (state, data) {
@@ -45,6 +46,9 @@ export default createStore({
       state.localList = obj.localList;
       state.localId = obj.localId
       reloadList(state)
+    },
+    selectListFun (state, list) {
+      state.selectList = list
     }
   },
   actions: {

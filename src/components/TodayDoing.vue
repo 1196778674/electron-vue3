@@ -1,15 +1,11 @@
 <template>
   <el-table
-    :data="
-      tableData
-      // .filter(
-      //   (data) =>
-      //     // !search || data.name.toLowerCase().includes(search.toLowerCase())
-      // )
-    "
+    :data="tableData"
+    @selection-change="selectionChange"
     height="350"
     style="width: 100%; max-height: 350px; overflow-y: scroll"
   >
+    <el-table-column type="selection" width="55" />
     <el-table-column label="任务名称" prop="name" fixed width="200" />
     <el-table-column label="任务描述" prop="desc" width="250" />
     <el-table-column label="开始时间" width="200">
@@ -110,6 +106,10 @@ export default {
         });
     };
 
+    const selectionChange = (list: any) => {
+      store.commit("selectListFun", list);
+    };
+
     const dateFormat = (time: number) =>
       moment(time).format("YYYY-MM-DD HH:mm:ss");
 
@@ -119,6 +119,7 @@ export default {
       handleDelete,
       dateFormat,
       closeDialog,
+      selectionChange,
       ...toRefs(state),
       props,
     };
