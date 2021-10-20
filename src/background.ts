@@ -83,20 +83,23 @@ app.on('ready', async () => {
     }, 3000);
   })
 
+  let list: number[] = []
+  let now: number = 0
+  let interval: any = null
   ipcMain.on('watch-lists', (event, arg) => {
-    let interval: any = null
-    let now: number = 0
-    let list: number[] = []
+    clearInterval(interval)
     interval = setInterval(() => {
       now = (new Date()).valueOf()
       JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
-        if(Math.abs(v.times[1] - now) <= 1000 * 60 * 10) {
-          !list.includes(v.localId) && event.reply('watch-reply', v) || list.push(v.localId)
+        let t = v.times[1] - now
+        if( t <= 1000 * 60 * 10 && t > 0) {
+          !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
         }
       });
-      if(list.length === JSON.parse(arg).length) {
-        clearInterval(interval)
-      }
+      event.reply('test', list)
+      // if(list.length === JSON.parse(arg).length) {
+      //   clearInterval(interval)
+      // }
     },1000)
   })
 

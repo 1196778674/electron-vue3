@@ -95,9 +95,10 @@ export default {
     };
 
     onMounted(() => {
-      // ipcRenderer.on("toast-reply", (event, arg) => {
-      //   console.log(arg); // prints "pong"
-      // });
+      // test
+      ipcRenderer.on("test", (event, arg) => {
+        console.log(arg); // prints "pong"
+      });
 
       ipcRenderer.on("import-reply", (event, arg) => {
         store.commit("importObj", arg);
@@ -106,9 +107,9 @@ export default {
       ipcRenderer.on("watch-reply", (event, arg) => {
         const obj = arg;
         ElNotification({
-          title: "提示",
+          title: `${obj.name}`,
           type: "warning",
-          message: `${obj.name}将于${timeFun(obj.times[1])}到期，请尽快处理`,
+          message: `${timeFun(obj.times[1])}到期，请尽快处理`,
           duration: 0,
         });
       });
