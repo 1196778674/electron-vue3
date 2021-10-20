@@ -88,20 +88,27 @@ app.on('ready', async () => {
   let interval: any = null
   ipcMain.on('watch-lists', (event, arg) => {
     !!interval && clearInterval(interval)
-    interval = setInterval(() => {
-      now = (new Date()).valueOf()
-      JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
-        let t = v.times[1] - now
-        if( t <= 1000 * 60 * 10 && t > 0) {
-          !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
-          // list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
-        }
-      });
-      // event.reply('test', list)
-      // if(list.length === JSON.parse(arg).length) {
-      //   clearInterval(interval)
-      // }
-    },1000)
+    setTimeout(() => {
+      interval = setInterval(() => {
+        now = (new Date()).valueOf()
+        JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
+          let t = v.times[1] - now
+          if( t <= 1000 * 60 * 10 && t > 0) {
+            !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
+            // list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
+          }
+        });
+        // event.reply('test', list)
+        // if(list.length === JSON.parse(arg).length) {
+        //   clearInterval(interval)
+        // }
+      },1000)
+    });
+  })
+
+  ipcMain.on('doneCase', (event, id) => {
+    // event.reply('test', id) 
+    list = list.filter((v: number) => v !== id)
   })
 
   ipcMain.on('exportFun', (event, arg) => {

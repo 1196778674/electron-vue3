@@ -41,6 +41,7 @@
 <script lang="ts">
 import { toRefs, ref } from "vue";
 import moment from "moment";
+import { ipcRenderer } from "electron";
 
 interface IRowData {
   name: string;
@@ -62,6 +63,7 @@ export default {
 
     const dialogDone = (localId: number) => {
       context.emit("dialogDone", localId);
+      ipcRenderer.send("doneCase", localId);
       closeDialog();
     };
     return {

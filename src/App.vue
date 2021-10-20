@@ -82,7 +82,7 @@ export default {
       (lists) => {
         ipcRenderer.send(
           "watch-lists",
-          JSON.stringify(lists.filter((v: any) => v.tips))
+          JSON.stringify(lists.filter((v: any) => v.tips && v.type === 0))
         );
       },
       {
