@@ -23,6 +23,15 @@ export default createStore({
       state.localList = state.localList.filter((v: any) => v.localId !== id)
       reloadList(state)
     },
+    delayTimes(state, obj: {localId: number, times: number}) {
+      state.localList = state.localList.map((v: any) => {
+        if(v.localId === obj.localId) {
+          v.times[1] = Number(v.times[1]) + obj.times
+        }
+        return v
+      })
+      reloadList(state)
+    },
     doneLocalList (state, id) {
       state.localList = state.localList.map((v: any) => {
         if(v.localId === id) {

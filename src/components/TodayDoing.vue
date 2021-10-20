@@ -87,8 +87,19 @@ export default {
       state.outerVisible = close;
     };
 
-    const dialogDone = (localId: number) => {
-      store.commit("doneLocalList", localId);
+    const dialogDone = (obj: {
+      localId: number;
+      type: number;
+      delayTimes: number;
+    }) => {
+      if (obj.type) {
+        store.commit("doneLocalList", obj.localId);
+      } else {
+        store.commit("delayTimes", {
+          localId: obj.localId,
+          times: obj.delayTimes * 3600 * 1000,
+        });
+      }
     };
 
     const handleDelete = (index: number, row: { localId: number }) => {

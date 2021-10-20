@@ -20,19 +20,32 @@
             任务描述：<span>{{ rowData.desc }}</span>
           </li>
           <li>
-            是否完成：<el-button
+            是否完成：
+            <el-switch v-model="done" />
+            <!--<el-button
               size="small"
               type="primary"
               @click="dialogDone(rowData.localId)"
               >完成</el-button
-            >
+            > -->
+          </li>
+          <li v-if="!done">是否延期：{{ delayTimes }} 小时</li>
+          <li v-if="!done">
+            <el-slider
+              v-model="delayTimes"
+              :step="4"
+              show-stops
+              :format-tooltip="(value) => value + '小时'"
+            ></el-slider>
           </li>
         </ul>
       </div>
     </template>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="default" @click="closeDialog">确定</el-button>
+        <el-button type="default" @click="closeDialog(rowData.localId)"
+          >确定</el-button
+        >
       </div>
     </template>
   </el-dialog>
@@ -47,6 +60,7 @@ interface IRowData {
   name: string;
   time: number[];
   desc: string;
+  type: number;
 }
 
 export default {
@@ -55,23 +69,40 @@ export default {
   setup(props: any, context: any) {
     const outerVisible = ref<boolean>(props.outerVisible);
     const rowData = ref<IRowData>(props.rowData);
-    const closeDialog = () => {
+    const done = ref<number>(0);
+    const delayTimes = ref<number>(0);
+    const closeDialog = (localId: number) => {
+      if (done.value) {
+        ipcRenderer.send("doneCase", localId);
+      }
+      context.emit("dialogDone", {
+        localId: localId,
+        type: done.value ? 1 : 0,
+        delayTimes: done.value ? 0 : delayTimes.value,
+      });
       context.emit("closeDialog", false);
+      setTimeout(() => {
+        done.value = 0;
+        delayTimes.value = 0;
+      });
     };
     const dateFormat = (time: number) =>
       moment(time).format("YYYY-MM-DD HH:mm:ss");
 
-    const dialogDone = (localId: number) => {
-      context.emit("dialogDone", localId);
-      ipcRenderer.send("doneCase", localId);
-      closeDialog();
-    };
+    // const dialogDone = (localId: number) => {
+    //   context.emit("dialogDone", localId);
+    //   ipcRenderer.send("doneCase", localId);
+    //   closeDialog();
+    // };
+
     return {
+      done,
+      delayTimes,
       rowData,
       closeDialog,
       context,
       outerVisible,
-      dialogDone,
+      // dialogDone,
       ...toRefs(props),
       dateFormat,
     };
