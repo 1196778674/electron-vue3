@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, h, watch, toRefs } from "vue";
+import { ref, reactive, onMounted, h, watch, toRefs, computed } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
 import moment from "moment";
@@ -77,8 +77,10 @@ export default {
       rowData: {},
     });
 
+    const list = computed(() => store.state.localList);
+
     watch(
-      store.state.localList,
+      list,
       (lists) => {
         ipcRenderer.send(
           "watch-lists",
@@ -87,6 +89,7 @@ export default {
       },
       {
         immediate: true,
+        deep: true,
       }
     );
 
@@ -94,8 +97,19 @@ export default {
       state.outerVisible = close;
     };
 
-    const dialogDone = (localId: number) => {
-      store.commit("doneLocalList", localId);
+    const dialogDone = (obj: {
+      localId: number;
+      type: number;
+      delayTimes: number;
+    }) => {
+      if (obj.type) {
+        store.commit("doneLocalList", obj.localId);
+      } else {
+        store.commit("delayTimes", {
+          localId: obj.localId,
+          times: obj.delayTimes * 3600 * 1000,
+        });
+      }
     };
 
     const createCase = () => {
@@ -122,9 +136,7 @@ export default {
       state.rowData = store.state.localList.filter(
         (v: { localId: number }) => v.localId === id
       )[0];
-      console.log("====================================");
-      console.log(notice.value.close());
-      console.log("====================================");
+      notice.value.close();
     };
 
     onMounted(() => {

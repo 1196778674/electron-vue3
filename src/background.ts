@@ -87,12 +87,13 @@ app.on('ready', async () => {
   let now: number = 0
   let interval: any = null
   ipcMain.on('watch-lists', (event, arg) => {
+    // event.reply('test', JSON.parse(arg));
     !!interval && clearInterval(interval)
     setTimeout(() => {
       interval = setInterval(() => {
         now = (new Date()).valueOf()
         JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
-          let t = v.times[1] - now
+          let t = v.times[1] - now 
           if( t <= 1000 * 60 * 10 && t > 0) {
             !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
             // list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
