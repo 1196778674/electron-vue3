@@ -136,7 +136,7 @@ export default {
       state.rowData = store.state.localList.filter(
         (v: { localId: number }) => v.localId === id
       )[0];
-      notice.value.close();
+      // notice.value.close();
     };
 
     onMounted(() => {
@@ -155,7 +155,7 @@ export default {
 
       ipcRenderer.on("watch-reply", (event, arg) => {
         const obj = arg;
-        notice.value = ElNotification({
+        ElNotification({
           title: `${obj.name}`,
           type: "warning",
           message: h("div", {}, [
