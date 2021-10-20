@@ -32,18 +32,25 @@
       <create-case @closeCase="closeCase"></create-case>
     </el-drawer>
   </el-container>
+  <dialog-model
+    :outerVisible="outerVisible"
+    :rowData="rowData"
+    @closeDialog="closeDialog"
+    @dialogDone="dialogDone"
+  ></dialog-model>
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, computed, watch } from "vue";
+import { ref, reactive, onMounted, h, watch, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
 import moment from "moment";
 import { useStore } from "vuex";
-import { ElNotification } from "element-plus";
+import { ElNotification, NotificationHandle } from "element-plus";
 
 import VHome from "./views/Home.vue";
 import CreateCase from "./components/CreateCase.vue";
+import DialogModel from "./components/DialogModel.vue";
 
 type IActive = string;
 
@@ -51,6 +58,7 @@ export default {
   components: {
     CreateCase,
     VHome,
+    DialogModel,
   },
   setup() {
     const store = useStore();
@@ -61,6 +69,13 @@ export default {
       console.log(index);
     };
     const showDrawer = ref<boolean>(false);
+
+    const notice = ref<NotificationHandle>({ close: () => {} });
+
+    const state = reactive({
+      outerVisible: false,
+      rowData: {},
+    });
 
     watch(
       store.state.localList,
@@ -74,6 +89,14 @@ export default {
         immediate: true,
       }
     );
+
+    const closeDialog = (close: boolean) => {
+      state.outerVisible = close;
+    };
+
+    const dialogDone = (localId: number) => {
+      store.commit("doneLocalList", localId);
+    };
 
     const createCase = () => {
       showDrawer.value = true;
@@ -94,6 +117,16 @@ export default {
       return moment(time).format("YYYY-MM-DD HH:mm:ss");
     };
 
+    const showDetail = (id: number) => {
+      state.outerVisible = true;
+      state.rowData = store.state.localList.filter(
+        (v: { localId: number }) => v.localId === id
+      )[0];
+      console.log("====================================");
+      console.log(notice.value.close());
+      console.log("====================================");
+    };
+
     onMounted(() => {
       // test
       ipcRenderer.on("test", (event, arg) => {
@@ -104,12 +137,27 @@ export default {
         store.commit("importObj", arg);
       });
 
+      (window as any).showDetail = (id: number) => {
+        showDetail(id);
+      };
+
       ipcRenderer.on("watch-reply", (event, arg) => {
         const obj = arg;
-        ElNotification({
+        notice.value = ElNotification({
           title: `${obj.name}`,
           type: "warning",
-          message: `${timeFun(obj.times[1])}到期，请尽快处理`,
+          message: h("div", {}, [
+            h("span", {}, `${timeFun(obj.times[1])}到期，请尽快处理`),
+            h(
+              "button",
+              {
+                style:
+                  "margin-left: 10px;border: none; background: #67c23a; padding: 5px 10px;font-size: 12px; color: #fff; border-radius: 3px;cursor: pointer;",
+                onclick: `showDetail(${obj.localId})`,
+              },
+              "急速处理"
+            ),
+          ]),
           duration: 0,
         });
       });
@@ -118,11 +166,15 @@ export default {
       timeFun,
       exportCase,
       importCase,
-      showDrawer,
-      active,
       handleSelect,
       createCase,
       closeCase,
+      closeDialog,
+      dialogDone,
+      showDetail,
+      showDrawer,
+      active,
+      ...toRefs(state),
     };
   },
 };
