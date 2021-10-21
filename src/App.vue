@@ -1,28 +1,29 @@
 <template>
   <el-container>
     <el-header class="app-header">
-      <el-badge class="app-title">任务清单</el-badge>
-      <!--<el-menu
-        :default-active="active"
-        mode="horizontal"
-        @select="handleSelect"
-        class="menu"
-      >
-        <el-menu-item index="/">
-          <router-link to="/">首页</router-link>
-        </el-menu-item>
-        <el-menu-item index="/list">
-          <router-link to="/list">清单</router-link>
-        </el-menu-item>
-      </el-menu> -->
-      <div>
+      <div class="header-menu">
+        <el-badge class="app-title">任务清单</el-badge>
+        <el-menu
+          :default-active="active"
+          mode="horizontal"
+          @select="handleSelect"
+          class="menu"
+        >
+          <el-menu-item index="/">
+            <router-link to="/">清单</router-link>
+          </el-menu-item>
+          <el-menu-item index="/list">
+            <router-link to="/list">操作</router-link>
+          </el-menu-item>
+        </el-menu>
+      </div>
+      <div v-if="showButton">
         <el-button type="warning" @click="exportCase">导出任务</el-button>
         <el-button type="success" @click="importCase">导入任务</el-button>
         <el-button type="primary" @click="createCase">新建任务</el-button>
       </div>
     </el-header>
     <router-view />
-    <!-- <v-home></v-home> -->
     <el-drawer
       v-model="showDrawer"
       title="新建任务"
@@ -48,7 +49,6 @@ import moment from "moment";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 
-import VHome from "./views/Home.vue";
 import CreateCase from "./components/CreateCase.vue";
 import DialogModel from "./components/DialogModel.vue";
 
@@ -66,8 +66,9 @@ export default {
     const useRouterCurrent = reactive(useRouter());
     const path = useRouterCurrent.options.history.location;
     const active = ref<IActive>(path || "/");
+    const showButton = ref<boolean>(false);
     const handleSelect = (index: string): void => {
-      console.log(index);
+      showButton.value = index === "/" ? true : false;
     };
     const showDrawer = ref<boolean>(false);
 
@@ -143,6 +144,8 @@ export default {
     };
 
     onMounted(() => {
+      // 是否展示按钮
+      showButton.value = active.value === "/" ? true : false;
       // test
       ipcRenderer.on("test", (event, arg) => {
         console.log(arg); // prints "pong"
@@ -190,6 +193,7 @@ export default {
       showDetail,
       showDrawer,
       active,
+      showButton,
       ...toRefs(state),
     };
   },
@@ -221,6 +225,11 @@ export default {
   .app-title {
     font-size: 22px;
     margin-right: 30px;
+  }
+  .header-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .menu {
     width: auto;
