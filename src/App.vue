@@ -21,8 +21,8 @@
         <el-button type="primary" @click="createCase">新建任务</el-button>
       </div>
     </el-header>
-    <!-- <router-view /> -->
-    <v-home></v-home>
+    <router-view />
+    <!-- <v-home></v-home> -->
     <el-drawer
       v-model="showDrawer"
       title="新建任务"
@@ -46,7 +46,7 @@ import { useRouter } from "vue-router";
 import { ipcRenderer } from "electron";
 import moment from "moment";
 import { useStore } from "vuex";
-import { ElNotification, NotificationHandle } from "element-plus";
+import { ElNotification } from "element-plus";
 
 import VHome from "./views/Home.vue";
 import CreateCase from "./components/CreateCase.vue";
@@ -57,9 +57,10 @@ type IActive = string;
 export default {
   components: {
     CreateCase,
-    VHome,
+    // VHome,
     DialogModel,
   },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
     const store = useStore();
     const useRouterCurrent = reactive(useRouter());
@@ -69,8 +70,6 @@ export default {
       console.log(index);
     };
     const showDrawer = ref<boolean>(false);
-
-    const notice = ref<NotificationHandle>({ close: () => {} });
 
     const state = reactive({
       outerVisible: false,
@@ -84,7 +83,11 @@ export default {
       (lists) => {
         ipcRenderer.send(
           "watch-lists",
-          JSON.stringify(lists.filter((v: any) => v.tips && v.type === 0))
+          JSON.stringify(
+            lists.filter(
+              (v: { tips: boolean; type: number }) => v.tips && v.type === 0
+            )
+          )
         );
       },
       {
@@ -149,6 +152,7 @@ export default {
         store.commit("importObj", arg);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).showDetail = (id: number) => {
         showDetail(id);
       };

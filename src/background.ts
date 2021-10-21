@@ -4,7 +4,6 @@ import { app, protocol, BrowserWindow, Notification, ipcMain, dialog } from 'ele
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import fs from 'fs'
-import path, { resolve } from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -84,7 +83,7 @@ app.on('ready', async () => {
   })
 
   let list: number[] = []
-  let now: number = 0
+  let now = 0
   let interval: any = null
   ipcMain.on('watch-lists', (event, arg) => {
     // event.reply('test', interval);
@@ -92,7 +91,7 @@ app.on('ready', async () => {
     interval = setInterval(() => {
       now = (new Date()).valueOf()
       JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
-        let t = v.times[1] - now
+        const t = v.times[1] - now
         if( t <= 1000 * 60 * 10 && t > 0) {
           !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
           // list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
