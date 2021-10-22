@@ -69,6 +69,15 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+// push提醒func
+const toastFun = (obj: {localId: number, name: string, times:number[]}, event: any) => {
+  new Notification({
+    title: `${obj.name}`,
+    body: `即将到期，请尽快处理`
+  }).show()
+  event.reply('watch-reply', obj)
+}
+
 // 通信
   ipcMain.on('toast-message', (event, arg) => {
     setTimeout(() => {
@@ -93,8 +102,10 @@ app.on('ready', async () => {
       JSON.parse(arg).forEach((v: {times: number[], name: string, desc: string, localId: number}) => {
         const t = v.times[1] - now
         if( t <= 1000 * 60 * 10 && t > 0) {
-          !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
-          // list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
+          // 渲染层toast提示
+          // !list.includes(v.localId) && event.reply('watch-reply', v) || (!list.includes(v.localId) && list.push(v.localId))
+          // 进程层 系统级 toast提示
+          !list.includes(v.localId) && toastFun(v, event) || (!list.includes(v.localId) && list.push(v.localId))
         }
       });
       // event.reply('test', list)

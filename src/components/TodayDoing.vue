@@ -61,7 +61,7 @@ export default {
   name: "TodayDoing",
   props: {
     list: {
-      type: () => [],
+      type: Function,
     },
   },
   components: { DialogModel },
@@ -69,7 +69,7 @@ export default {
     const state = reactive<{
       tableData: ComputedRef;
       outerVisible: boolean;
-      rowData: {};
+      rowData: unknown;
     }>({
       tableData: computed(() => props.list),
       // 展示弹框
@@ -117,7 +117,7 @@ export default {
         });
     };
 
-    const selectionChange = (list: any) => {
+    const selectionChange = (list: []) => {
       store.commit("selectListFun", list);
     };
 

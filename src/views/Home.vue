@@ -95,10 +95,10 @@ export default defineComponent({
     const state = reactive<IState>({
       localList: computed(() => store.state.localList),
       done: computed(() =>
-        store.state.localList.filter((v: any) => v.type === 1)
+        store.state.localList.filter((v: { type: number }) => v.type === 1)
       ),
       doing: computed(() =>
-        store.state.localList.filter((v: any) => v.type === 0)
+        store.state.localList.filter((v: { type: number }) => v.type === 0)
       ),
     });
 
