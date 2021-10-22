@@ -7,7 +7,6 @@ import fs from 'fs'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -37,7 +36,10 @@ async function createWindow() {
     win.loadURL('app://./index.html')
     // win.webContents.openDevTools()
   }
-
+  // 设置标题
+  win.setTitle('任务清单-小灰灰')
+  // 设置菜单
+  // win.setMenu({})
 }
 
 // Quit when all windows are closed.
