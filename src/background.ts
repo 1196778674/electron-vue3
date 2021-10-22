@@ -35,9 +35,9 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
     // win.webContents.openDevTools()
+    win.setTitle('任务清单-小灰灰')
   }
   // 设置标题
-  win.setTitle('任务清单-小灰灰')
   // 设置菜单
   // win.setMenu({})
 }
