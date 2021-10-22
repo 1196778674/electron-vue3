@@ -8,7 +8,7 @@ module.exports = {
                 "productName": "项目清单-小灰灰", //项目名，也是生成的安装文件名，即demo.exe
                 "copyright": "Copyright © 2021", //版权信息
                 "directories": {
-                    "output": "./build" //输出文件路径
+                    "output": "./dist_electron" //输出文件路径
                 },
                 "asar": true,
                 "dmg": {
